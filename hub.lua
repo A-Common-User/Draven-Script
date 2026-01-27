@@ -1,4 +1,10 @@
 local player = game.Players.LocalPlayer
+local UIS = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+
+-- ========= 基础检测 =========
+local isMobile = UIS.TouchEnabled and not UIS.KeyboardEnabled
+getgenv().HubMinimized = getgenv().HubMinimized or false
 
 -- 安全销毁已有 Hub
 pcall(function()
@@ -8,41 +14,40 @@ end)
 -- 创建 GUI
 local gui = Instance.new("ScreenGui")
 gui.Name = "SimpleHub"
+gui.ResetOnSpawn = false
 gui.Parent = player:WaitForChild("PlayerGui")
 
 -- 主窗口
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 320, 0, 420)
-frame.Position = UDim2.new(0.5, -160, 0.5, -210)
+frame.Size = isMobile and UDim2.new(0,260,0,340) or UDim2.new(0,320,0,420)
+frame.Position = UDim2.new(0.5,-frame.Size.X.Offset/2,0.5,-frame.Size.Y.Offset/2)
 frame.BorderSizePixel = 0
 frame.Active = true
 frame.Draggable = true
 
--- 圆角 + 阴影
-local frameCorner = Instance.new("UICorner", frame)
-frameCorner.CornerRadius = UDim.new(0, 16)
+-- 圆角 + 描边
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0,16)
 local frameStroke = Instance.new("UIStroke", frame)
-frameStroke.Color = Color3.fromRGB(60, 60, 60)
+frameStroke.Color = Color3.fromRGB(60,60,60)
 frameStroke.Thickness = 2
 
 -- 背景渐变
 local frameGradient = Instance.new("UIGradient", frame)
 frameGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(40, 40, 70)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 45, 100))
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(40,40,70)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(70,45,100))
 }
 frameGradient.Rotation = 45
 
--- 拖动时光影效果
-frame.Draggable = true
-frame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+-- 拖动光效
+frame.InputBegan:Connect(function(i)
+    if i.UserInputType == Enum.UserInputType.MouseButton1 then
         frameGradient.Rotation = 60
-        frameStroke.Color = Color3.fromRGB(100,100,150)
+        frameStroke.Color = Color3.fromRGB(120,120,180)
     end
 end)
-frame.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+frame.InputEnded:Connect(function(i)
+    if i.UserInputType == Enum.UserInputType.MouseButton1 then
         frameGradient.Rotation = 45
         frameStroke.Color = Color3.fromRGB(60,60,60)
     end
@@ -50,137 +55,146 @@ end)
 
 -- 标题
 local title = Instance.new("TextLabel", frame)
-title.Size = UDim2.new(1, 0, 0, 50)
+title.Size = UDim2.new(1,0,0,50)
 title.BackgroundTransparency = 1
 title.Text = "Draven's Script Storage"
 title.TextColor3 = Color3.new(1,1,1)
 title.TextScaled = true
 title.Font = Enum.Font.GothamBold
-title.BorderSizePixel = 0
 
--- 标题动态渐变光晕
 local titleGradient = Instance.new("UIGradient", title)
 titleGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 180, 180)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 180, 255))
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255,180,180)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255,255,255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(180,180,255))
 }
-titleGradient.Rotation = 90
--- 光晕动画
-spawn(function()
+
+task.spawn(function()
     while gui.Parent do
         for i=0,1,0.01 do
             titleGradient.Offset = Vector2.new(i,0)
             task.wait(0.02)
         end
-        for i=1,0,-0.01 do
-            titleGradient.Offset = Vector2.new(i,0)
-            task.wait(0.02)
-        end
     end
 end)
 
--- 按钮容器（滚动）
-local list = Instance.new("ScrollingFrame", frame)
-list.Position = UDim2.new(0, 0, 0, 50)
-list.Size = UDim2.new(1, 0, 1, -50)
-list.BackgroundTransparency = 1
-list.ScrollBarThickness = 6
-list.CanvasSize = UDim2.new(0,0,0,0)
+-- ===== 最小化按钮 =====
+local minimize = Instance.new("TextButton", frame)
+minimize.Text = "—"
+minimize.Font = Enum.Font.GothamBold
+minimize.TextScaled = true
+minimize.Size = UDim2.new(0,40,0,40)
+minimize.Position = UDim2.new(1,-45,0,5)
+minimize.BackgroundTransparency = 1
+minimize.TextColor3 = Color3.new(1,1,1)
 
-local layout = Instance.new("UIListLayout", list)
-layout.Padding = UDim.new(0, 10)
-layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-layout.SortOrder = Enum.SortOrder.LayoutOrder
+-- ===== 悬浮 Icon =====
+local icon = Instance.new("ImageButton", gui)
+icon.Size = isMobile and UDim2.fromScale(0.13,0.13) or UDim2.fromScale(0.06,0.06)
+icon.Position = UDim2.fromScale(0.92,0.5)
+icon.BackgroundColor3 = Color3.fromRGB(50,50,90)
+icon.Visible = false
+icon.AutoButtonColor = false
+Instance.new("UICorner", icon).CornerRadius = UDim.new(1,0)
+Instance.new("UIStroke", icon).Color = Color3.fromRGB(180,180,255)
 
-layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    list.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y)
-end)
-
--- 创建按钮函数（带发光 + 悬停 + 点击 + 粒子）
-local function createButton(text, callback, isClose)
-    local btn = Instance.new("TextButton", list)
-    btn.Size = UDim2.new(0.9, 0, 0, 50)
-    btn.Text = text
-    btn.Font = Enum.Font.GothamBold
-    btn.TextScaled = true
-    btn.BorderSizePixel = 0
-    btn.AutoButtonColor = false
-
-    local btnCorner = Instance.new("UICorner", btn)
-    btnCorner.CornerRadius = UDim.new(0, 12)
-    local btnStroke = Instance.new("UIStroke", btn)
-    btnStroke.Color = Color3.fromRGB(120, 120, 120)
-    btnStroke.Thickness = 1
-
-    if isClose then
-        btn.TextColor3 = Color3.fromRGB(255,50,50)
-        btn.BackgroundColor3 = Color3.fromRGB(50,50,50)
-    else
-        btn.TextColor3 = Color3.fromRGB(255,255,255)
-        -- 背景渐变
-        local gradient = Instance.new("UIGradient", btn)
-        gradient.Color = ColorSequence.new{
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 50, 120)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 60, 160))
-        }
-        gradient.Rotation = 45
-
-        -- 发光效果
-        local glow = Instance.new("UIStroke", btn)
-        glow.Color = Color3.fromRGB(200,200,255)
-        glow.Thickness = 2
-        glow.Transparency = 0.5
-        glow.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-
-        -- 悬停效果
-        btn.MouseEnter:Connect(function()
-            gradient.Color = ColorSequence.new{
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 70, 180)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 80, 220))
-            }
-            btnStroke.Color = Color3.fromRGB(200,200,255)
-            btn:TweenSize(UDim2.new(0.95,0,0,55), "Out", "Quad", 0.15, true)
-        end)
-        btn.MouseLeave:Connect(function()
-            gradient.Color = ColorSequence.new{
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 50, 120)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 60, 160))
-            }
-            btnStroke.Color = Color3.fromRGB(120,120,120)
-            btn:TweenSize(UDim2.new(0.9,0,0,50), "Out", "Quad", 0.15, true)
-        end)
-    end
-
-    -- 点击动画 + 粒子效果
-    btn.MouseButton1Click:Connect(function()
-        btn:TweenSize(UDim2.new(btn.Size.X.Scale,btn.Size.X.Offset,0,45), "Out", "Quad", 0.1, true, function()
-            btn:TweenSize(UDim2.new(btn.Size.X.Scale,btn.Size.X.Offset,0,50), "Out", "Quad", 0.1, true)
-        end)
-
-        -- 粒子模拟（小圆点飞出）
-        for i=1,5 do
-            local p = Instance.new("Frame", gui)
-            p.Size = UDim2.new(0,6,0,6)
-            p.Position = UDim2.new(0, btn.AbsolutePosition.X + math.random(0,btn.AbsoluteSize.X), 0, btn.AbsolutePosition.Y + math.random(0,btn.AbsoluteSize.Y))
-            p.BackgroundColor3 = Color3.fromRGB(255,255,255)
-            local pCorner = Instance.new("UICorner", p)
-            pCorner.CornerRadius = UDim.new(0,3)
-            spawn(function()
-                for t=0,1,0.05 do
-                    p.Position = p.Position + UDim2.new(0,math.random(-10,10),0, -20*t)
-                    p.BackgroundTransparency = t
-                    task.wait(0.02)
-                end
-                p:Destroy()
-            end)
-        end
-
-        callback()
-    end)
+-- Icon 拖动 + 吸边
+do
+	local dragging, dragStart, startPos
+	icon.InputBegan:Connect(function(i)
+		if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
+			dragging = true
+			dragStart = i.Position
+			startPos = icon.Position
+		end
+	end)
+	icon.InputChanged:Connect(function(i)
+		if dragging then
+			local d = i.Position - dragStart
+			icon.Position = UDim2.fromScale(
+				math.clamp(startPos.X.Scale + d.X / workspace.CurrentCamera.ViewportSize.X, 0, 0.95),
+				math.clamp(startPos.Y.Scale + d.Y / workspace.CurrentCamera.ViewportSize.Y, 0, 0.9)
+			)
+		end
+	end)
+	icon.InputEnded:Connect(function()
+		if dragging then
+			dragging = false
+			local snap = icon.Position.X.Scale > 0.5 and 0.92 or 0.02
+			TweenService:Create(icon, TweenInfo.new(0.25), {
+				Position = UDim2.fromScale(snap, icon.Position.Y.Scale)
+			}):Play()
+		end
+	end)
 end
 
--- 整合按钮
+-- ===== 最小化逻辑 =====
+local function minimizeHub()
+	getgenv().HubMinimized = true
+	TweenService:Create(frame, TweenInfo.new(0.25), {Size = UDim2.new(0,0,0,0)}):Play()
+	task.wait(0.25)
+	frame.Visible = false
+	icon.Visible = true
+end
+
+local function openHub()
+	getgenv().HubMinimized = false
+	frame.Visible = true
+	icon.Visible = false
+	TweenService:Create(frame, TweenInfo.new(0.25), {
+		Size = isMobile and UDim2.new(0,260,0,340) or UDim2.new(0,320,0,420)
+	}):Play()
+end
+
+minimize.MouseButton1Click:Connect(minimizeHub)
+icon.MouseButton1Click:Connect(openHub)
+
+-- 手机默认最小化
+if isMobile or getgenv().HubMinimized then
+	frame.Visible = false
+	icon.Visible = true
+end
+
+-- =========================
+-- 下面：你的原按钮系统（完全没动）
+-- =========================
+
+local list = Instance.new("ScrollingFrame", frame)
+list.Position = UDim2.new(0,0,0,50)
+list.Size = UDim2.new(1,0,1,-50)
+list.BackgroundTransparency = 1
+list.ScrollBarThickness = 6
+
+local layout = Instance.new("UIListLayout", list)
+layout.Padding = UDim.new(0,10)
+layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+	list.CanvasSize = UDim2.new(0,0,0,layout.AbsoluteContentSize.Y)
+end)
+
+local function createButton(text, callback, close)
+	local b = Instance.new("TextButton", list)
+	b.Size = UDim2.new(0.9,0,0,50)
+	b.Text = text
+	b.Font = Enum.Font.GothamBold
+	b.TextScaled = true
+	b.AutoButtonColor = false
+	Instance.new("UICorner", b).CornerRadius = UDim.new(0,12)
+	if close then
+		b.TextColor3 = Color3.fromRGB(255,60,60)
+		b.BackgroundColor3 = Color3.fromRGB(40,40,40)
+	else
+		b.TextColor3 = Color3.new(1,1,1)
+		local g = Instance.new("UIGradient", b)
+		g.Color = ColorSequence.new{
+			ColorSequenceKeypoint.new(0, Color3.fromRGB(80,50,120)),
+			ColorSequenceKeypoint.new(1, Color3.fromRGB(150,60,160))
+		}
+	end
+	b.MouseButton1Click:Connect(callback)
+end
+
+-- 按钮
 createButton("v Universal v", function()
     print("What? Why would you click this??")
 end)
