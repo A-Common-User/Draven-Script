@@ -165,8 +165,8 @@ end
 -- ========= 创建 Tabs / Pages =========
 createTab("Universal")
 createTab("TSB")
-createTab("99 night")
-createTab("other games")
+createTab("99_night")
+createTab("other_games")
 
 local universal = createPage("Universal")
 local games = createPage("Games")
@@ -187,19 +187,19 @@ createButton(universal,"Jerk off R15",function()
 end)
 
 createButton(universal,"Ghostplayer",function()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/A-Common-User/Draven-Script/refs/heads/main/ghostplayer.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/A-Common-User/Draven-Script/main/ghostplayer.lua"))()
 end)
 
-createButton(99 night,"VapeVoidware",function()
+createButton(99_night,"VapeVoidware",function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/VapeVoidware/VWExtra/main/NightsInTheForest.lua"))()
 end)
 
-createButton(other games,"The Lost Front",function()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Bac0nHck/Scripts/refs/heads/main/TheLostFront.lua"))()
+createButton(other_games,"The Lost Front",function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Bac0nHck/Scripts/main/TheLostFront.lua"))()
 end)
 
 createButton(TSB,"Phantasm",function()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/ATrainz/Phantasm/refs/heads/main/Games/TSB.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/ATrainz/Phantasm/main/Games/TSB.lua"))()
 end)
 
 createButton(TSB,"TSB Sukuna", function()
@@ -207,5 +207,5 @@ createButton(TSB,"TSB Sukuna", function()
 end)
 
 createButton(TSB,"TSB Trashcan", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/yes1nt/yes/refs/heads/main/Trashcan%20Man", true))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/yes1nt/yes/main/Trashcan%20Man", true))()
 end)
