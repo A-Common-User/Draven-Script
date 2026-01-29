@@ -120,7 +120,7 @@ end
 -- ================= Tabs / Pages =================
 createTab("Universal")
 createTab("TSB")
-createTab("99Night")
+createTab("Night99")
 createTab("Other")
 
 local Universal = createPage("Universal")
