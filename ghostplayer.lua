@@ -1,8 +1,8 @@
 local CoreGui = game:GetService("StarterGui")
 
 CoreGui:SetCore("SendNotification", {
-    Title = "Script Made By GhostPlayer",
-    Text = "Bypassed by Draven",
+    Title = "Script Made By Ghostplayer",
+    Text = "Key bypassed by Draven",
     Icon = "rbxassetid://29819383",
     Duration = 2,
 })
