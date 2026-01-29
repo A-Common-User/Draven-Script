@@ -147,8 +147,10 @@ createButton(Universal,"Ghostplayer",function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/A-Common-User/Draven-Script/main/ghostplayer.lua"))()
 end)
 
-createButton(99Night,"VapeVoidware",function()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/VapeVoidware/VWExtra/main/NightsInTheForest.lua"))()
+createButton(Night99,"VapeVoidware",function()
+    loadstring(game:HttpGet(
+        "https://raw.githubusercontent.com/VapeVoidware/VWExtra/main/NightsInTheForest.lua"
+    ))()
 end)
 
 createButton(Other,"The Lost Front",function()
