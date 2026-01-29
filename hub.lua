@@ -25,13 +25,11 @@ frame.BorderSizePixel = 0
 frame.Active = true
 frame.Draggable = true
 
--- 圆角 + 描边
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0,16)
 local frameStroke = Instance.new("UIStroke", frame)
 frameStroke.Color = Color3.fromRGB(60,60,60)
 frameStroke.Thickness = 2
 
--- 背景渐变
 local frameGradient = Instance.new("UIGradient", frame)
 frameGradient.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, Color3.fromRGB(40,40,70)),
@@ -39,7 +37,6 @@ frameGradient.Color = ColorSequence.new{
 }
 frameGradient.Rotation = 45
 
--- 拖动光效
 frame.InputBegan:Connect(function(i)
     if i.UserInputType == Enum.UserInputType.MouseButton1 then
         frameGradient.Rotation = 60
@@ -78,7 +75,7 @@ task.spawn(function()
     end
 end)
 
--- ===== 最小化按钮 =====
+-- 最小化按钮
 local minimize = Instance.new("TextButton", frame)
 minimize.Text = "—"
 minimize.Font = Enum.Font.GothamBold
@@ -88,7 +85,7 @@ minimize.Position = UDim2.new(1,-45,0,5)
 minimize.BackgroundTransparency = 1
 minimize.TextColor3 = Color3.new(1,1,1)
 
--- ===== 悬浮 Icon =====
+-- 悬浮 Icon
 local icon = Instance.new("ImageButton", gui)
 icon.Size = isMobile and UDim2.fromScale(0.13,0.13) or UDim2.fromScale(0.06,0.06)
 icon.Position = UDim2.fromScale(0.92,0.5)
@@ -98,65 +95,62 @@ icon.AutoButtonColor = false
 Instance.new("UICorner", icon).CornerRadius = UDim.new(1,0)
 Instance.new("UIStroke", icon).Color = Color3.fromRGB(180,180,255)
 
--- Icon 拖动 + 吸边
 do
-	local dragging, dragStart, startPos
-	icon.InputBegan:Connect(function(i)
-		if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
-			dragging = true
-			dragStart = i.Position
-			startPos = icon.Position
-		end
-	end)
-	icon.InputChanged:Connect(function(i)
-		if dragging then
-			local d = i.Position - dragStart
-			icon.Position = UDim2.fromScale(
-				math.clamp(startPos.X.Scale + d.X / workspace.CurrentCamera.ViewportSize.X, 0, 0.95),
-				math.clamp(startPos.Y.Scale + d.Y / workspace.CurrentCamera.ViewportSize.Y, 0, 0.9)
-			)
-		end
-	end)
-	icon.InputEnded:Connect(function()
-		if dragging then
-			dragging = false
-			local snap = icon.Position.X.Scale > 0.5 and 0.92 or 0.02
-			TweenService:Create(icon, TweenInfo.new(0.25), {
-				Position = UDim2.fromScale(snap, icon.Position.Y.Scale)
-			}):Play()
-		end
-	end)
+    local dragging, dragStart, startPos
+    icon.InputBegan:Connect(function(i)
+        if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = i.Position
+            startPos = icon.Position
+        end
+    end)
+    icon.InputChanged:Connect(function(i)
+        if dragging then
+            local d = i.Position - dragStart
+            icon.Position = UDim2.fromScale(
+                math.clamp(startPos.X.Scale + d.X / workspace.CurrentCamera.ViewportSize.X, 0, 0.95),
+                math.clamp(startPos.Y.Scale + d.Y / workspace.CurrentCamera.ViewportSize.Y, 0, 0.9)
+            )
+        end
+    end)
+    icon.InputEnded:Connect(function()
+        if dragging then
+            dragging = false
+            local snap = icon.Position.X.Scale > 0.5 and 0.92 or 0.02
+            TweenService:Create(icon, TweenInfo.new(0.25), {
+                Position = UDim2.fromScale(snap, icon.Position.Y.Scale)
+            }):Play()
+        end
+    end)
 end
 
--- ===== 最小化逻辑 =====
 local function minimizeHub()
-	getgenv().HubMinimized = true
-	TweenService:Create(frame, TweenInfo.new(0.25), {Size = UDim2.new(0,0,0,0)}):Play()
-	task.wait(0.25)
-	frame.Visible = false
-	icon.Visible = true
+    getgenv().HubMinimized = true
+    TweenService:Create(frame, TweenInfo.new(0.25), {Size = UDim2.new(0,0,0,0)}):Play()
+    task.wait(0.25)
+    frame.Visible = false
+    icon.Visible = true
 end
 
 local function openHub()
-	getgenv().HubMinimized = false
-	frame.Visible = true
-	icon.Visible = false
-	TweenService:Create(frame, TweenInfo.new(0.25), {
-		Size = isMobile and UDim2.new(0,260,0,340) or UDim2.new(0,320,0,420)
-	}):Play()
+    getgenv().HubMinimized = false
+    frame.Visible = true
+    icon.Visible = false
+    TweenService:Create(frame, TweenInfo.new(0.25), {
+        Size = isMobile and UDim2.new(0,260,0,340) or UDim2.new(0,320,0,420)
+    }):Play()
 end
 
 minimize.MouseButton1Click:Connect(minimizeHub)
 icon.MouseButton1Click:Connect(openHub)
 
--- 手机默认最小化
 if isMobile or getgenv().HubMinimized then
-	frame.Visible = false
-	icon.Visible = true
+    frame.Visible = false
+    icon.Visible = true
 end
 
 -- =========================
--- 下面：你的原按钮系统（完全没动）
+-- 按钮系统（已修复点击效果）
 -- =========================
 
 local list = Instance.new("ScrollingFrame", frame)
@@ -169,32 +163,68 @@ local layout = Instance.new("UIListLayout", list)
 layout.Padding = UDim.new(0,10)
 layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-	list.CanvasSize = UDim2.new(0,0,0,layout.AbsoluteContentSize.Y)
+    list.CanvasSize = UDim2.new(0,0,0,layout.AbsoluteContentSize.Y)
 end)
 
 local function createButton(text, callback, close)
-	local b = Instance.new("TextButton", list)
-	b.Size = UDim2.new(0.9,0,0,50)
-	b.Text = text
-	b.Font = Enum.Font.GothamBold
-	b.TextScaled = true
-	b.AutoButtonColor = false
-	Instance.new("UICorner", b).CornerRadius = UDim.new(0,12)
-	if close then
-		b.TextColor3 = Color3.fromRGB(255,60,60)
-		b.BackgroundColor3 = Color3.fromRGB(40,40,40)
-	else
-		b.TextColor3 = Color3.new(1,1,1)
-		local g = Instance.new("UIGradient", b)
-		g.Color = ColorSequence.new{
-			ColorSequenceKeypoint.new(0, Color3.fromRGB(80,50,120)),
-			ColorSequenceKeypoint.new(1, Color3.fromRGB(150,60,160))
-		}
-	end
-	b.MouseButton1Click:Connect(callback)
+    local btn = Instance.new("TextButton", list)
+    btn.Size = UDim2.new(0.9,0,0,50)
+    btn.Text = text
+    btn.Font = Enum.Font.GothamBold
+    btn.TextScaled = true
+    btn.AutoButtonColor = false
+    btn.BackgroundColor3 = Color3.fromRGB(40,40,40)
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0,12)
+
+    local btnStroke = Instance.new("UIStroke", btn)
+    btnStroke.Color = Color3.fromRGB(120,120,120)
+    btnStroke.Thickness = 1
+
+    local gradient
+    if not close then
+        gradient = Instance.new("UIGradient", btn)
+        gradient.Color = ColorSequence.new{
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(80,50,120)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(150,60,160))
+        }
+    else
+        btn.TextColor3 = Color3.fromRGB(255,60,60)
+    end
+
+    local clicking = false
+
+    btn.MouseEnter:Connect(function()
+        if clicking or close then return end
+        gradient.Color = ColorSequence.new{
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(120,70,180)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(200,80,220))
+        }
+        btnStroke.Color = Color3.fromRGB(200,200,255)
+        btn:TweenSize(UDim2.new(0.95,0,0,55), "Out", "Quad", 0.15, true)
+    end)
+
+    btn.MouseLeave:Connect(function()
+        if clicking or close then return end
+        gradient.Color = ColorSequence.new{
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(80,50,120)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(150,60,160))
+        }
+        btnStroke.Color = Color3.fromRGB(120,120,120)
+        btn:TweenSize(UDim2.new(0.9,0,0,50), "Out", "Quad", 0.15, true)
+    end)
+
+    btn.MouseButton1Click:Connect(function()
+        clicking = true
+        btn:TweenSize(UDim2.new(0.88,0,0,45), "Out", "Back", 0.12, true)
+        task.wait(0.12)
+        btn:TweenSize(UDim2.new(0.95,0,0,55), "Out", "Back", 0.15, true)
+        task.wait(0.05)
+        clicking = false
+        callback()
+    end)
 end
 
--- 按钮
+-- ========= 按钮 =========
 createButton("v Universal v", function()
     print("What? Why would you click this??")
 end)
