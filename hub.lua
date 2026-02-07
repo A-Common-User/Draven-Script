@@ -185,11 +185,15 @@ end
 createTab("Universal")
 createTab("TSB")
 createTab("Night99")
+createTab("Aotr")
+createTab("Demonology")
 createTab("Other")
 
 local Universal = createPage("Universal")
 local TSB = createPage("TSB")
 local Night99 = createPage("Night99")
+local Aotr = createPage("Aotr")
+local Demonology = createPage("Demonology")
 local Other = createPage("Other")
 
 switchTab("Universal")
@@ -201,6 +205,18 @@ end)
 
 createButton(Universal,"Jerk off R6",function()
 	loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
+end)
+
+createButton(Aotr,"TekkitAotr",function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/zerunquist/TekkitAotr/refs/heads/main/main"))()
+end)
+
+createButton(Demonology,"Demon UI",function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/RelkzzRebranded/THEGHOSTISAMOLESTER/refs/heads/main/script.lua"))()
+end)
+
+createButton(Demonology,"Demon Detect",function()
+	loadstring(game:HttpGet("https://pastebin.com/raw/87GTQwtw"))()
 end)
 
 createButton(Universal,"Jerk off R15",function()
