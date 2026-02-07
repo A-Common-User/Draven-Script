@@ -1,8 +1,3 @@
---==================================================
--- Draven's Script Storage | Final Polished Hub
--- No Key System | Mobile Ready | Theme Switch
---==================================================
-
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
@@ -274,7 +269,7 @@ createButton(TSB,"Phantasm",function()
 end)
 
 createButton(TSB,"Hub",function()
-	https://raw.githubusercontent.com/A-Common-User/Draven-Script/main/TSB%20Hub.lua
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/A-Common-User/Draven-Script/main/TSB%20Hub.lua"))()
 end)
 
 createButton(TSB,"Trashcan", function()
