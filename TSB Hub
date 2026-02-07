@@ -1,0 +1,129 @@
+local DiscordLib = loadstring(game:HttpGet"https://raw.githubusercontent.com/dawid-scripts/UI-Libs/main/discord%20lib.txt")()
+ 
+local win = DiscordLib:Window("Moveset Hub")
+ 
+-- Moveset Scripts
+local movesetServ = win:Server("Moveset Scripts", "")
+ 
+local movesetBtns = movesetServ:Channel("Moveset Buttons")
+ 
+movesetBtns:Button("Saitama to Sukuna", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/damir512/whendoesbrickdie/main/tspno.txt",true))()
+    DiscordLib:Notification("Notification", "Saitama to Sukuna script executed", "Okay!")
+end)
+ 
+movesetBtns:Button("saitama to jk", function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/The-Strongest-Battlegrounds-JK-Moveset-24889"))()
+    DiscordLib:Notification("Notification", "saitama to jk script executed", "Okay!")
+end)
+ 
+movesetBtns:Button("garou to goku", function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/The-Strongest-Battlegrounds-Hero-hunter-moveset-into-OP-goku-moveset-17468"))()
+    DiscordLib:Notification("Notification", "garou to goku script executed", "Okay!")
+end)
+ 
+movesetBtns:Button("saitama to kenjihin", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Kenjihin69/Kenjihin69/refs/heads/main/Tp%20exploit%20saitama%20to%20jun"))()
+    DiscordLib:Notification("Notification", "saitama to kenjihin script executed", "Okay!")
+end)
+ 
+movesetBtns:Button("saitama to gojo", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Nova2ezz/jjs-gojo-/refs/heads/main/SaitamaToGojoV3_SOURCE-obfuscated_2.txt"))()
+    DiscordLib:Notification("Notification", "saitama to gojo script executed", "Okay!")
+end)
+ 
+movesetBtns:Button("saitama to gojo#2", function()
+    getgenv().morph = true
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/skibiditoiletfan2007/BaldyToSorcerer/refs/heads/main/LatestV2.lua"))()
+    DiscordLib:Notification("Notification", "saitama to gojo#2 script executed", "Okay!")
+end)
+ 
+movesetBtns:Button("garou to kj", function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/KJ-The-Strongest-Battlegrounds-Garou-to-kj-27085"))()
+    DiscordLib:Notification("Notification", "garou to kj script executed", "Okay!")
+end)
+ 
+movesetBtns:Button("garou to ARCAURA", function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/The-Strongest-Battlegrounds-ARCAURA-22657"))()
+    DiscordLib:Notification("Notification", "garou to ARCAURA script executed", "Okay!")
+end)
+ 
+movesetBtns:Button("atomic to toji", function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/The-Strongest-Battlegrounds-Toji-moveset-for-Atomic-Samurai-22498"))()
+    DiscordLib:Notification("Notification", "atomic to toji script executed", "Okay!")
+end)
+ 
+movesetBtns:Button("reaper", function()
+    getgenv().Music = false
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Reapvitalized/TSB/main/APOPHENIA.lua"))()
+    DiscordLib:Notification("Notification", "reaper script executed", "Okay!")
+end)
+ 
+movesetBtns:Button("sonic to toji", function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/The-Strongest-Battlegrounds-Toji-moveset-21449"))()
+    DiscordLib:Notification("Notification", "sonic to toji script executed", "Okay!")
+end)
+ 
+movesetBtns:Button("another script hub", function()
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-Spectral-Hub-26790"))()
+    DiscordLib:Notification("Notification", "another script hub executed", "Okay!")
+end)
+ 
+movesetBtns:Button("garou to okarun", function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/The-Strongest-Battlegrounds-Garou-to-OKARUN-24065"))()
+    DiscordLib:Notification("Notification", "garou to okarun script executed", "Okay!")
+end)
+ 
+movesetBtns:Button("garou to sukuna", function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/The-Strongest-Battlegrounds-Garou-to-Sukuna-24081"))()
+    DiscordLib:Notification("Notification", "garou to sukuna script executed", "Okay!")
+end)
+ 
+movesetBtns:Button("saitama to jun", function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/KJ-The-Strongest-Battlegrounds-best-tsb-jun-moveset-25554"))()
+    DiscordLib:Notification("Notification", "saitama to jun script executed", "Okay!")
+end)
+ 
+movesetBtns:Button("garou to goku v2", function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/The-Strongest-Battlegrounds-Goku-Moveset-V2-17977"))()
+    DiscordLib:Notification("Notification", "garou to goku v2 script executed", "Okay!")
+end)
+ 
+-- TSB Hubs
+local hubsServ = win:Server("TSB Hubs", "")
+ 
+local hubsBtns = hubsServ:Channel("Hubs Buttons")
+ 
+-- Adding 6 buttons in TSB Hubs section
+hubsBtns:Button("ns expression", function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/The-Strongest-Battlegrounds-NS-Expression-Best-TSB-Script-16732"))()
+    DiscordLib:Notification("Notification", "NS Expression script executed", "Okay!")
+end)
+ 
+hubsBtns:Button("custom moveset hub", function()
+    loadstring(game:HttpGet("https://gist.githubusercontent.com/MartisScripts/4983813d660ee8d7a61528a9ba582974/raw/06025e5cd7213df3fe2c46566406e0a7f55eb669/TheScript"))()
+    DiscordLib:Notification("Notification", "Custom Moveset Hub script executed", "Okay!")
+end)
+ 
+hubsBtns:Button("kade hub", function()
+    getgenv().AutoReport = true
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/skibiditoiletfan2007/KadeHubRepository/main/Latest.lua"))()
+    DiscordLib:Notification("Notification", "Kade Hub script executed", "Okay!")
+end)
+ 
+hubsBtns:Button("Glacier hub", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/xVicity/GLACIER/main/LATEST.lua"))()
+    DiscordLib:Notification("Notification", "Glacier Hub script executed", "Okay!")
+end)
+ 
+hubsBtns:Button("FFJ1", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/FFJ1/Roblox-Exploits/main/scripts/TSBUtils.lua"))()
+    DiscordLib:Notification("Notification", "FFJ1 Hub script executed", "Okay!")
+end)
+ 
+hubsBtns:Button("auto block", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Cyborg883/TSB/refs/heads/main/CombatGui"))()
+    DiscordLib:Notification("Notification", "Auto Block script executed", "Okay!")
+end)
+ 
+win:Server("Main", "http://www.roblox.com/asset/?id=6031075938")
