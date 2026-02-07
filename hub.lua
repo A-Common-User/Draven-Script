@@ -1,126 +1,172 @@
--- ================== Draven Hub FINAL ==================
-local player = game.Players.LocalPlayer
+--==================================================
+-- Draven's Script Storage | Final Polished Hub
+-- No Key System | Mobile Ready | Theme Switch
+--==================================================
+
+local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local SoundService = game:GetService("SoundService")
 
+local player = Players.LocalPlayer
 local isMobile = UIS.TouchEnabled and not UIS.KeyboardEnabled
 
+-- ================= Cleanup =================
 pcall(function()
     player.PlayerGui.SimpleHub:Destroy()
 end)
 
--- ================== GUI ==================
+-- ================= Save State =================
+local minimized = false
+
+-- ================= ScreenGui =================
 local gui = Instance.new("ScreenGui")
 gui.Name = "SimpleHub"
 gui.ResetOnSpawn = false
 gui.Parent = player.PlayerGui
 
--- ================== MAIN FRAME ==================
+-- ================= Main Frame =================
 local frame = Instance.new("Frame", gui)
-frame.Size = isMobile and UDim2.new(0,260,0,360) or UDim2.new(0,340,0,460)
+frame.Size = isMobile and UDim2.new(0,270,0,380) or UDim2.new(0,360,0,480)
 frame.Position = UDim2.new(0.5,-frame.Size.X.Offset/2,0.5,-frame.Size.Y.Offset/2)
-frame.BackgroundColor3 = Color3.fromRGB(38,38,65)
+frame.BackgroundColor3 = Color3.fromRGB(25,20,30)
 frame.Active = true
 frame.Draggable = true
-frame.BorderSizePixel = 0
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0,18)
 
-local stroke = Instance.new("UIStroke", frame)
-stroke.Color = Color3.fromRGB(90,90,140)
-stroke.Thickness = 2
+-- Gradient
+local bgGrad = Instance.new("UIGradient", frame)
+bgGrad.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(120,30,40)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(20,20,30))
+}
 
--- ================== TITLE ==================
+-- ================= Title =================
 local title = Instance.new("TextLabel", frame)
 title.Size = UDim2.new(1,-90,0,45)
-title.Position = UDim2.new(0,15,0,5)
+title.Position = UDim2.new(0,12,0,6)
 title.BackgroundTransparency = 1
 title.Text = "Draven's Script Storage"
 title.Font = Enum.Font.GothamBold
 title.TextScaled = true
+title.TextXAlignment = Left
 title.TextColor3 = Color3.new(1,1,1)
 
--- ================== CLOSE BUTTON ==================
+-- ================= Close Button =================
 local close = Instance.new("TextButton", frame)
+close.Size = UDim2.new(0,32,0,32)
+close.Position = UDim2.new(1,-40,0,10)
 close.Text = "✕"
 close.Font = Enum.Font.GothamBold
 close.TextScaled = true
-close.Size = UDim2.new(0,35,0,35)
-close.Position = UDim2.new(1,-40,0,8)
-close.BackgroundColor3 = Color3.fromRGB(90,40,40)
-close.TextColor3 = Color3.new(1,1,1)
+close.TextColor3 = Color3.fromRGB(255,90,90)
+close.BackgroundColor3 = Color3.fromRGB(30,20,25)
 Instance.new("UICorner", close)
 
 close.MouseButton1Click:Connect(function()
     gui:Destroy()
 end)
 
--- ================== TAB BAR (SCROLL) ==================
+-- ================= Minimize =================
+local mini = Instance.new("TextButton", frame)
+mini.Size = UDim2.new(0,32,0,32)
+mini.Position = UDim2.new(1,-80,0,10)
+mini.Text = "—"
+mini.Font = Enum.Font.GothamBold
+mini.TextScaled = true
+mini.TextColor3 = Color3.new(1,1,1)
+mini.BackgroundColor3 = Color3.fromRGB(30,20,25)
+Instance.new("UICorner", mini)
+
+-- ================= Floating Icon =================
+local icon = Instance.new("TextButton", gui)
+icon.Size = UDim2.new(0,50,0,50)
+icon.Position = UDim2.new(0,20,0.5,-25)
+icon.Text = "D"
+icon.Font = Enum.Font.GothamBlack
+icon.TextScaled = true
+icon.TextColor3 = Color3.new(1,1,1)
+icon.BackgroundColor3 = Color3.fromRGB(120,30,40)
+icon.Visible = false
+icon.Active = true
+icon.Draggable = true
+Instance.new("UICorner", icon).CornerRadius = UDim.new(1,0)
+
+mini.MouseButton1Click:Connect(function()
+    frame.Visible = false
+    icon.Visible = true
+    minimized = true
+end)
+
+icon.MouseButton1Click:Connect(function()
+    frame.Visible = true
+    icon.Visible = false
+    minimized = false
+end)
+
+-- ================= Tabs Scroll =================
 local tabScroll = Instance.new("ScrollingFrame", frame)
-tabScroll.Size = UDim2.new(1,-20,0,38)
+tabScroll.Size = UDim2.new(1,-20,0,36)
 tabScroll.Position = UDim2.new(0,10,0,55)
-tabScroll.CanvasSize = UDim2.new(0,0,0,0)
-tabScroll.ScrollBarThickness = 4
+tabScroll.CanvasSize = UDim2.new()
+tabScroll.ScrollBarThickness = 0
 tabScroll.BackgroundTransparency = 1
-tabScroll.AutomaticCanvasSize = Enum.AutomaticSize.X
+tabScroll.AutomaticCanvasSize = X
 
 local tabLayout = Instance.new("UIListLayout", tabScroll)
-tabLayout.FillDirection = Enum.FillDirection.Horizontal
+tabLayout.FillDirection = Horizontal
 tabLayout.Padding = UDim.new(0,8)
 
--- ================== SEARCH ==================
+-- ================= Search =================
 local search = Instance.new("TextBox", frame)
 search.PlaceholderText = "Search..."
 search.Size = UDim2.new(1,-20,0,32)
 search.Position = UDim2.new(0,10,0,98)
-search.Text = ""
-search.ClearTextOnFocus = false
 search.Font = Enum.Font.Gotham
 search.TextScaled = true
 search.TextColor3 = Color3.new(1,1,1)
-search.BackgroundColor3 = Color3.fromRGB(30,30,55)
+search.BackgroundColor3 = Color3.fromRGB(30,20,25)
+search.ClearTextOnFocus = false
 Instance.new("UICorner", search)
 
--- ================== PAGES ==================
+-- ================= Pages =================
 local pages = {}
 
 local function createPage(name)
     local page = Instance.new("ScrollingFrame", frame)
-    page.Name = name
     page.Position = UDim2.new(0,0,0,140)
     page.Size = UDim2.new(1,0,1,-140)
-    page.ScrollBarThickness = 6
+    page.CanvasSize = UDim2.new()
+    page.ScrollBarThickness = 4
     page.Visible = false
     page.BackgroundTransparency = 1
 
     local layout = Instance.new("UIListLayout", page)
     layout.Padding = UDim.new(0,10)
-    layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    layout.HorizontalAlignment = Center
     layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        page.CanvasSize = UDim2.new(0,0,0,layout.AbsoluteContentSize.Y)
+        page.CanvasSize = UDim2.new(0,0,0,layout.AbsoluteContentSize.Y + 10)
     end)
 
     pages[name] = page
     return page
 end
 
-local currentTab
 local function switchTab(name)
     for n,p in pairs(pages) do
         p.Visible = (n == name)
     end
-    currentTab = name
     search.Text = ""
 end
 
 local function createTab(name)
     local b = Instance.new("TextButton", tabScroll)
+    b.Size = UDim2.new(0,90,1,0)
     b.Text = name
     b.Font = Enum.Font.GothamBold
     b.TextScaled = true
-    b.Size = UDim2.new(0,95,1,0)
-    b.BackgroundColor3 = Color3.fromRGB(70,60,120)
     b.TextColor3 = Color3.new(1,1,1)
+    b.BackgroundColor3 = Color3.fromRGB(60,25,35)
     Instance.new("UICorner", b)
 
     b.MouseButton1Click:Connect(function()
@@ -128,51 +174,39 @@ local function createTab(name)
     end)
 end
 
--- ================== BUTTON FX ==================
-local clickSound = Instance.new("Sound")
-clickSound.SoundId = "rbxassetid://9118828561"
-clickSound.Volume = 0.5
-clickSound.Parent = SoundService
+-- ================= Button FX =================
+local function ripple(btn)
+    local c = Instance.new("Frame", btn)
+    c.Size = UDim2.new(0,0,0,0)
+    c.Position = UDim2.new(0.5,0,0.5,0)
+    c.AnchorPoint = Vector2.new(0.5,0.5)
+    c.BackgroundColor3 = Color3.new(1,1,1)
+    c.BackgroundTransparency = 0.6
+    Instance.new("UICorner", c).CornerRadius = UDim.new(1,0)
 
-local function ripple(btn, x, y)
-    local r = Instance.new("Frame", btn)
-    r.BackgroundColor3 = Color3.fromRGB(255,255,255)
-    r.BackgroundTransparency = 0.7
-    r.Size = UDim2.new(0,0,0,0)
-    r.Position = UDim2.new(0,x,0,y)
-    Instance.new("UICorner", r).CornerRadius = UDim.new(1,0)
-
-    TweenService:Create(r, TweenInfo.new(0.4), {
-        Size = UDim2.new(0,300,0,300),
-        Position = UDim2.new(0,x-150,0,y-150),
+    TweenService:Create(c, TweenInfo.new(0.4), {
+        Size = UDim2.new(1.5,0,3,0),
         BackgroundTransparency = 1
     }):Play()
 
     task.delay(0.4, function()
-        r:Destroy()
+        c:Destroy()
     end)
 end
 
--- ================== CREATE BUTTON ==================
+-- ================= Create Button =================
 local function createButton(page, text, callback)
     local btn = Instance.new("TextButton", page)
-    btn.Size = UDim2.new(0.9,0,0,50)
+    btn.Size = UDim2.new(0.92,0,0,50)
     btn.Text = text
     btn.Font = Enum.Font.GothamBold
     btn.TextScaled = true
-    btn.BackgroundColor3 = Color3.fromRGB(55,55,90)
     btn.TextColor3 = Color3.new(1,1,1)
-    btn.AutoButtonColor = false
+    btn.BackgroundColor3 = Color3.fromRGB(50,25,35)
     Instance.new("UICorner", btn)
 
-    btn.MouseButton1Click:Connect(function(x,y)
-        clickSound:Play()
-        ripple(btn, btn.AbsoluteSize.X/2, btn.AbsoluteSize.Y/2)
-
-        btn:TweenSize(UDim2.new(0.88,0,0,46),"Out","Back",0.12,true)
-        task.wait(0.12)
-        btn:TweenSize(UDim2.new(0.9,0,0,50),"Out","Back",0.15,true)
-
+    btn.MouseButton1Click:Connect(function()
+        ripple(btn)
         callback()
     end)
 
@@ -239,11 +273,11 @@ createButton(TSB,"Phantasm",function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/ATrainz/Phantasm/main/Games/TSB.lua"))()
 end)
 
-createButton(TSB,"TSB Sukuna", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/damir512/whendoesbrickdie/main/tspno.txt",true))()
+createButton(TSB,"Hub",function()
+	https://raw.githubusercontent.com/A-Common-User/Draven-Script/main/TSB%20Hub.lua
 end)
 
-createButton(TSB,"TSB Trashcan", function()
+createButton(TSB,"Trashcan", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/yes1nt/yes/main/Trashcan%20Man", true))()
 end)
 -- ================== END ==================
